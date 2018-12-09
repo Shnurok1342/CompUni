@@ -1,0 +1,75 @@
+<div class="header">
+  <h1>КомпУНИ</h1>
+
+  <nav class="navbar navbar-expand-md navbar-dark">
+    <a href="/" class="navbar-brand">КомпУНИ</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="navbar-collapse collapse justify-content-stretch" id="navbar">
+
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url "products_info" %}">Товары</a>
+            </li>
+        </ul>
+
+        <form class="ml-3 my-auto d-inline  w-50" action="{% url 'search:search' %}" >
+            <div class="input-group">
+              <input id="search" name="q" type="text" class="form-control border-right-0" placeholder="Поиск">
+              <div class="input-group-append">
+                <button class="btn btn-outline-primary border-left-0" type="submit">Найти</button>
+              </div>
+              <div class="filter-button">
+                <a class="btn btn-outline-primary" href="{% url "search:filter" %}">Фильтры</a>
+              </div>
+            </div>
+        </form>
+
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item basket-container">
+            <a class="nav-link" href="#">
+              Корзина
+              <span id="basket_total_nmb">
+                {% if products_total_nmb %}
+                  ({{ products_total_nmb }})
+                {% else %}
+                  (0)
+                {% endif %}
+              </span>
+            </a>
+          </li>
+          <div class="basket-items hidden">
+            <ul class="">
+              {% for product_in_basket in products_in_basket %}
+                <li>
+                  {{ product_in_basket.product.name }},
+                  {{ product_in_basket.nmb }} шт. по
+                  {{ product_in_basket.price_per_item }} руб.
+                  <a class="delete-item" href="" data-product_id = "{{ product_in_basket.id }}">x</a>
+                </li>
+              {% endfor %}
+            </ul>
+            <a class="btn btn-danger" href="{% url 'checkout_create' %}">Оформить заказ</a>
+          </div>
+
+          <form class="" id="basket-navbar-post" action="{% url 'basket_adding' %}"> {% csrf_token %}
+          </form>
+
+          {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="#">Профиль: {{user.get_username}}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url "logout" %}">Выйти</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="navbar-brand" href="{% url "login" %}">Войти</a>
+            </li>
+          {% endif %}
+        </ul>
+    </div>
+</nav>
+
+</div>

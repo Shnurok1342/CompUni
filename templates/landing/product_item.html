@@ -1,0 +1,29 @@
+<div class="col-lg-3">
+  <div class="product-item">
+    <div class="image">
+      <a href="{% url 'product' product_id=product_image.product.id %}">
+        <img class="img-fluid" src="{{ product_image.image.url }}">
+      </a>
+    </div>
+
+    {% if product_image.product.discount %}
+      <div class="discount-container">
+        <span>{{ product_image.product.discount }}%</span>
+      </div>
+    {% endif %}
+
+    <div class="add-to-card-btn">
+      <h4><a href="{% url 'product' product_id=product_image.product.id %}">{{ product_image.product.name }}</a></h4>
+      <h4>{{ product_image.product.price }} руб.</h4>
+      <a class="add-basket-item btn btn-success" href=""
+      data-number = "1"
+      data-product_id = "{{ product_image.product.id }}"
+      data-product_name = "{{ product.name }}"
+      data-price = "{{ product.price }}"
+      >
+        Добавить в корзину
+      </a>
+
+    </div>
+  </div>
+</div>

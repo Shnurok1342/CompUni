@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}
+  <title>Правка :: {{ product.name }} :: {{ product.category.name }}</title>
+{% endblock %}
+{% block main %}
+  <form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="form-field">
+        <div class="label">
+          {{ field.label }}
+        </div>
+        <div class="control">
+          {{ field }}
+          {{ field.help_text }}
+        </div>
+      </div>
+    {% endfor %}
+
+    {{ formset.management_form }}
+    <table role="grid">
+      <thead>
+        <tr>
+          <th>id</th>
+          <th>Фотография</th>
+          <th>Главная</th>
+          <th>Активная</th>
+          <th>Удалить</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for form_image in formset %}
+          <tr class="answer-form {% if form_image.instance.id %}item{% else %}new{% endif %}">
+            <td>{{ form_image.id }}
+              {% if form_image.id.value %}
+                <p>{{form_image.id.value}}</p>
+              {% endif %}
+            </td>
+            <td>{{ form_image.image }}</td>
+            <td>{{ form_image.is_main }}</td>
+            <td>{{ form_image.is_active }}</td>
+            {% if form_image.instance.id %}
+              <td>{{ form_image.DELETE }}</td>
+            {% else %}
+              <td></td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <input type="submit" value="Сохранить">
+  </form>
+  <p>
+    {% if category %}
+      <a href="{% url "products_info" category_id=product.category.id %}?page={{ pn }}">Назад</a>
+    {% else %}
+      <a href="{% url "products_info" %}?page={{ pn }}">Назад</a>
+    {% endif %}
+  </p>
+{% endblock %}

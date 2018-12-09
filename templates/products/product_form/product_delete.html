@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}
+  <title>Удаление товара :: {{ product.name }} :: {{ product.category.name }}</title>
+{% endblock %}
+
+{% block main %}
+  <h1>{{ product.name }}</h1>
+  <p class="category">Категория: {{ product.category.name }}</p>
+  <p>{{ product.description|linebreaksbr }}</p>
+  <p>Стоимость: {{ product.price }} Руб.</p>
+  {% if product.quantity %}
+    <p>В наличии: {{ product.quantity }} шт.</p>
+  {% else %}
+    <p class="not-in-stock">Нет в наличии</p>
+  {% endif %}
+
+  <div class="container">
+    <div class="row">
+      {% for image_item in product.productimage_set.all %}
+        <div class="col-lg-6">
+          <div class="product-image-item">
+            <img src="{{ image_item.image.url }}" class="img-fluid">
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <p>Дата добавления: {{ product.date_updated }}</p>
+  <form action="" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Удалить">
+  </form>
+  <p>
+    {% if category %}
+      <a href="{% url "products_info" category_id=product.category.id %}?page={{ pn }}">Назад</a>
+    {% else %}
+      <a href="{% url "products_info" %}?page={{ pn }}">Назад</a>
+    {% endif %}
+  </p>
+{% endblock %}

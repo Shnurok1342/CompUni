@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load widget_tweaks %}
+
+{% block title %}
+  <title>КомпУНИ - Фильтр</title>
+{% endblock %}
+
+{% block main %}
+  <form method="get">
+    <div class="well">
+      <h4 style="margin-top: 0">Фильтры поиска</h4>
+      <div class="row">
+        <div class="form-group col-sm-4 col-md-3">
+          {{ filter_form.name.label_tag }}
+          {% render_field filter_form.name class="form-control" %}
+        </div>
+        <div class="form-group col-sm-4 col-md-3">
+          {{ filter_form.category.label_tag }}
+          {% render_field filter_form.category class="form-control" %}
+        </div>
+        <div class="form-group col-sm-4 col-md-3">
+          {{ filter_form.price__gt.label_tag }}
+          {% render_field filter_form.price__gt class="form-control" %}
+        </div>
+        <div class="form-group col-sm-4 col-md-3">
+          {{ filter_form.price__lt.label_tag }}
+          {% render_field filter_form.price__lt class="form-control" %}
+        </div>
+      </div>
+      <button type="submit" class="btn btn-success">
+        <span class="glyphicon glyphicon-search"></span> Найти
+      </button>
+    </div>
+  </form>
+
+  <div class="section product-list container">
+    <div class="row">
+
+      {% if product_lists %}
+        <div class="table col-lg-12">
+          <h2>Найденные товары</h2>
+          <table>
+            <tr>
+              <th>Название</th>
+              <th>Стоимость</th>
+              <th>Есть в наличии</th>
+
+              {% if perms.products.change_product %}
+                <th>&nbsp;</th>
+                <th>&nbsp;</th>
+              {% endif %}
+
+            </tr>
+            {% for product in product_lists %}
+              <tr>
+                <td class="centered">
+                  <a href="{% url "product" product_id=product.id %}">{{ product.name }}</a>
+                </td>
+                <td class="centered">
+                  {{ product.price }} руб.
+                </td>
+                <td class="centered">
+                  {% if product.quantity %}
+                    {{ product.quantity }}
+                  {% else %}
+                    -
+                  {% endif %}
+                </td>
+                {% if perms.products.change_product %}
+                  <td class="centered">
+                    <a href="{% url "product_edit" product_id=product.id %}">Изменить</a>
+                  </td>
+                  <td class="centered">
+                    <a href="{% url "product_delete" product_id=product.id %}">Удалить</a>
+                  </td>
+                {% endif %}
+              </tr>
+            {% endfor %}
+          </table>
+        </div>
+        <div class="pagination col-sm-3 offset-sm-5 col-3 offset-3">
+          {% bootstrap_pagination product_lists url=filter_code %}
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+{% endblock %}

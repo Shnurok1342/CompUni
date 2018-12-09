@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}
+  <title>КомпУНИ - Успех</title>
+{% endblock %}
+
+{% block main %}
+  <div class="section">
+    <div class="container">
+      <h1>Заказ № {{ order.id }} успешно оформлен!</h1>
+      <h1>Спасибо!</h1>
+      <h3>Заказанные товары:</h3>
+      <ul>
+        {% for product_in_order in products_in_order %}
+          <li><a href="{% url "product" product_id=product_in_order.product.id %}">{{ product_in_order.product.name }}</a> {{ product_in_order.nmb }} шт. </li>
+        {% endfor %}
+      </ul>
+      <h3>Итого: {{ order.total_price }} руб.</h3>
+    </div>
+  </div>
+{% endblock %}

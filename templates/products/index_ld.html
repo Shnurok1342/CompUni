@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+
+{% block title %}
+  <title>КомпУНИ {{ category.name }}</title>
+{% endblock %}
+
+{% block main %}
+  <div class="section product-list">
+    <div class="container">
+      <div class="row">
+
+        <div class="table col-lg-12">
+          {% if category %}
+            <h2>{{ category }}</h2>
+          {% else %}
+            <h2>Товары</h2>
+          {% endif %}
+          {% if perms.products.add_product and category %}
+            <p><a href="{% url "product_add" category_id=category.id %}?page={{ page_obj.number }}">Добавить товар</a></p>
+          {% endif %}
+          <table>
+            <tr>
+              <th>Название</th>
+              <th>Стоимость</th>
+              <th>Есть в наличии</th>
+
+              {% if perms.products.change_product %}
+                <th>&nbsp;</th>
+                <th>&nbsp;</th>
+              {% endif %}
+
+            </tr>
+            {% for product in object_list %}
+            <tr>
+              <td class="centered">
+                {% if category %}
+                  <a href="{% url "product" product_id=product.id category_id=category.id %}?page={{ page_obj.number }}">{{ product.name }}</a>
+                {% else %}
+                  <a href="{% url "product" product_id=product.id %}?page={{ page_obj.number }}">{{ product.name }}</a>
+                {% endif %}
+              </td>
+              <td class="centered">
+                {{ product.price }} руб.
+              </td>
+              <td class="centered">
+                {% if product.quantity %}
+                  {{ product.quantity }}
+                {% else %}
+                  -
+                {% endif %}
+              </td>
+              {% if perms.products.change_product %}
+                <td class="centered">
+                  {% if category %}
+                    <a href="{% url "product_edit" product_id=product.id category_id=category.id %}?page={{ page_obj.number }}">Изменить</a>
+                  {% else %}
+                    <a href="{% url "product_edit" product_id=product.id %}?page={{ page_obj.number }}">Изменить</a>
+                  {% endif %}
+                </td>
+                <td class="centered">
+                  {% if category %}
+                    <a href="{% url "product_delete" product_id=product.id category_id=category.id %}?page={{ page_obj.number }}">Удалить</a>
+                  {% else %}
+                    <a href="{% url "product_delete" product_id=product.id %}?page={{ page_obj.number }}">Удалить</a>
+                  {% endif %}
+                </td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </table>
+        </div>
+
+          {% if paginator.num_pages > 1 %}
+            <div class="pagination col-sm-3 offset-sm-5 col-3 offset-3">
+              <ul class="pagination">
+                {% if page_obj.has_previous %}
+                  <li class="page-item">
+                  {% if category %}
+                    <a href="{% url "products_info" category_id=category.id %}?page={{ page_obj.previous_page_number }}" class="page-link previous">&laquo;</a>
+                  {% else %}
+                    <a href="{% url "products_info" %}?page={{ page_obj.previous_page_number }}" class="page-link previous">&laquo;</a>
+                  </li>
+                  {% endif %}
+                {% else %}
+                  <li class="page-item disabled">
+                    <span class="page-link previous">&lsaquo;&lsaquo;</span>
+                  </li>
+                {% endif %}
+                {% for pn in paginator.page_range %}
+                  {% if pn != page_obj.number %}
+                    {% if category %}
+                      <li class="page-item">
+                        <a class="page-link" href="{% url "products_info" category_id=category.id %}?page={{ pn }}">{{ pn }}</a>
+                      </li>
+                    {% else %}
+                      <li class="page-item">
+                        <a class="page-link" href="{% url "products_info" %}?page={{ pn }}">{{ pn }}</a>
+                      </li>
+                    {% endif %}
+                  {% else %}
+                    <li class="page-item active">
+                      <a class="page-link" href="#">{{ pn }} <span class="sr-only">(current)</span></a>
+                    </li>
+                  {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                  {% if category %}
+                    <li class="page-item">
+                      <a class="page-link" href="{% url "products_info" category_id=category.id %}?page={{ page_obj.next_page_number }}">&raquo;</a>
+                    </li>
+                  {% else %}
+                    <li class="page-item">
+                      <a class="page-link" href="{% url "products_info" %}?page={{ page_obj.next_page_number }}">&raquo;</a>
+                    </li>
+                  {% endif %}
+                {% else %}
+                  <li class="page-item disabled">
+                    <a class="page-link" href="#"><span>&raquo;</span></a>
+                  </li>
+                {% endif %}
+              </ul>
+            </div>
+          {% endif %}
+
+          <div class="back-url col-lg-12">
+            <h2><a href="{% url "products_info" %}">Все товары</a></h2>
+          </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

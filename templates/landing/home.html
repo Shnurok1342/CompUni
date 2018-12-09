@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}
+  <title>КомпУНИ</title>
+{% endblock %}
+
+{% block main %}
+  <div class="section section1">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <h1>
+            Новые поступления
+          </h1>
+        </div>
+        {% for product_image in products_images %}
+          {% include 'landing/product_item.html' %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="section section2 video-container">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <h1>
+            Видеокарты
+          </h1>
+        </div>
+        {% for product_image in products_images_video %}
+          {% include 'landing/product_item.html' %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="section section3 proc-container">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <h1>
+            Процессоры
+          </h1>
+        </div>
+        {% for product_image in products_images_proc %}
+          {% include 'landing/product_item.html' %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

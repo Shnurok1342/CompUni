@@ -1,0 +1,8 @@
+<div class="container">
+  <h2>Категории</h2>
+  <ul>
+    {% for cat in cats %}
+      <li><a href="{% url "products_info" category_id=cat.id %}">{{ cat.name }}</a></li>
+    {% endfor %}
+  </ul>
+</div>
