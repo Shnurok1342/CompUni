@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}
+  <title>КомпУНИ - Заказ №{{ order.id }}</title>
+{% endblock %}
+
+{% block main %}
+  <div class="section">
+    <div class="container">
+      <div class="row">
+        <div class="description col-lg-12">
+          <h1>Номер заказа №{{ order.id }}</h1>
+          <p>Заказчик: {{ order.user_profile }}</p>
+          <p>Статус: {{ order.status.name }}</p>
+          {% if order.comments %}
+            <p>Комментарий: {{ order.comments }}</p>
+          {% endif %}
+
+          <p>Заказанные товары:</p>
+          <ul>
+            {% for product_in_order in products_in_order %}
+              <li><a href="{% url "product" product_id=product_in_order.product.id %}">{{ product_in_order.product.name }}</a> {{ product_in_order.nmb }} шт. </li>
+            {% endfor %}
+          </ul>
+          <h3>Итого: {{ order.total_price }} руб.</h3>
+
+          <p>Дата добавления: {{ order.created }}</p>
+          <p>Дата изменения: {{ order.updated }}</p>
+          <p>
+            <a href="{% url "orders_info" %}?page={{ pn }}">Назад</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

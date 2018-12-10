@@ -34,6 +34,10 @@ class Order(models.Model):
         verbose_name_plural = 'Заказы'
 
     def save(self, *args, **kwargs):
+        products_in_order = ProductInOrder.objects.filter(order__id = self.id)
+        self.total_price = 0
+        for product_in_order in products_in_order:
+            self.total_price = self.total_price + product_in_order.total_price
         super(Order, self).save(*args, **kwargs)
 
 class ProductInOrder(models.Model):

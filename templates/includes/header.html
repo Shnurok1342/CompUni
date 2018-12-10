@@ -23,6 +23,11 @@
               <div class="filter-button">
                 <a class="btn btn-outline-primary" href="{% url "search:filter" %}">Фильтры</a>
               </div>
+              {% if perms.orders.add_order %}
+                <div class="filter-button">
+                  <a class="btn btn-outline-primary" href="{% url "orders_info" %}">Заказы</a>
+                </div>
+              {% endif %}
             </div>
         </form>
 

@@ -79,3 +79,44 @@ def checkout_success(request, order_id):
         request.session["session_key"] = 123
         request.session.cycle_key()
     return render(request, 'orders/checkout_success.html', locals())
+
+from django.views.generic.base import ContextMixin
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
+from .models import Order, ProductInOrder
+
+# класс ContextMixin - создает контекст данных (context)
+# поэтому наследуем его, чтобы добавить свое в контекст (например список категорий)
+class PageListMixin(ContextMixin):
+
+    def get_context_data(self, **kwargs):
+        context = super(PageListMixin, self).get_context_data(**kwargs)
+        try:
+            context["pn"] = self.request.GET["page"]
+        except KeyError:
+            context["pn"] = 1
+        return context
+
+class OrderListView(ListView, PageListMixin):
+    template_name = "orders/orders_ld.html"
+    paginate_by = 2
+
+    def get_queryset(self):
+        return Order.objects.order_by('id')
+
+# класс DetailView - класс для вывода информации определенной записи
+class OrderDetailView(PageListMixin, DetailView):
+    template_name = "orders/order.html"
+    model = Order
+    pk_url_kwarg = "order_id"
+    products_in_order = None
+
+    def get(self, request, *args, **kwargs):
+        self.products_in_order = ProductInOrder.objects.filter(order__id = self.kwargs["order_id"])
+        return super(OrderDetailView, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(OrderDetailView, self).get_context_data(**kwargs)
+        if self.products_in_order:
+            context["products_in_order"] = self.products_in_order
+        return context
